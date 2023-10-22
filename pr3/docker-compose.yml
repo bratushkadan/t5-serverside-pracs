@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  webserver:
+    # image: php:7.2-apache # Образ PHP c Apache (на Debian)
+    image: pr1_server:0.0.1
+    ports:
+      - 8080:80
+    volumes:
+      - ./script-dir:/var/www/html
+      - ./docker/php.ini/:/usr/local/etc/php/conf.d/
+    networks:
+      - app_network
+  db:
+    image: mysql:8.1.0
+    ports:
+      - '3306:3306'
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: '123'
+      MYSQL_DATABASE: db
+      MYSQL_USER: danilabratushka
+      MYSQL_PASSWORD: '123'
+    volumes:
+      - ./script-dir/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+    networks:
+      - app_network
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  app_network:
+    driver: bridge
