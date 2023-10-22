@@ -9,6 +9,8 @@ services:
     volumes:
       - ./script-dir:/var/www/html
       - ./docker/php.ini/:/usr/local/etc/php/conf.d/
+    networks:
+      - app_network
   db:
     image: mysql:8.1.0
     ports:
@@ -22,7 +24,13 @@ services:
     volumes:
       - ./script-dir/init.sql:/docker-entrypoint-initdb.d/init.sql
       - db_data:/var/lib/mysql
+    networks:
+      - app_network
 
 volumes:
   db_data:
     driver: local
+
+networks:
+  app_network:
+    driver: bridge
