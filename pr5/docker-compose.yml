@@ -14,7 +14,7 @@ services:
       java-app:
         condition: service_started
   java-app:
-    image: openjdk:17
+    image: java-app:0.0.1-pr5
     ports:
       - 8080
     networks:
@@ -42,17 +42,15 @@ services:
     networks:
       - app_network
     volumes:
-      - rschir_java_app_postgres_data:/var/lib/postgresql/data
+      - rschir_java_app_postgres_data_v0:/var/lib/postgresql/data
     healthcheck:
       test: ['CMD-SHELL', 'test -n `pg_isready -U $POSTGRES_USER | grep "accepting connections"`']
       interval: 1s
       retries: 5
 
 volumes:
-  pr3_db_data: # подключается том с данными из ПР3
-    external: true
-  rschir_java_app_postgres_data:
-    external: true
+  rschir_java_app_postgres_data_v0:
+    driver: local
   # db_data:
   # driver: local
 

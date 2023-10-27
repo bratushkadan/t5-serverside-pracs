@@ -4,6 +4,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        types:
+          registration:
+            json: com.vladmihalcea.hibernate.type.json.JsonBinaryType
   datasource:
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
