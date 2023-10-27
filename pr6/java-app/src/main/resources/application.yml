@@ -1,0 +1,20 @@
+server:
+  port: '80'
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    url: ${POSTGRES_URL}
+    driver-class-name: org.postgresql.Driver
+    platform: postgres
+  sql:
+    init:
+      platform: postgresql
+      mode: always

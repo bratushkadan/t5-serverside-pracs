@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Enrollments</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+</style>
+</head>
+<body>
+<h1>Enrollments</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Enrollment ID</th>
+            <th>Student ID</th>
+            <th>Student Name</th>
+            <th>Course ID</th>
+            <th>Course Name</th>
+            <th>Course Description</th>
+        </tr>
+    </thead>
+    <tbody id="enrollments-table">
+    </tbody>
+</table>
+<script>
+    fetch('/api/enrollments')
+        .then(response => response.json())
+        .then(enrollments => {
+            const enrollmentsTable = document.getElementById('enrollments-table');
+            enrollments.forEach(enrollment => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${enrollment.enrollment_id}</td>
+                    <td>${enrollment.student_id}</td>
+                    <td>${enrollment.student_name}</td>
+                    <td>${enrollment.course_id}</td>
+                    <td>${enrollment.course_name}</td>
+                    <td>${enrollment.course_description}</td>
+                `;
+                enrollmentsTable.appendChild(row);
+            });
+        })
+        .catch(error => console.error(error));
+</script>
+</body>
+</html>

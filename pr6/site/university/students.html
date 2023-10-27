@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Students</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Students</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Age</th>
+            </tr>
+        </thead>
+        <tbody id="students-table">
+        </tbody>
+    </table>
+    <script>
+        fetch('/api/students')
+            .then(response => response.json())
+            .then(students => {
+                const studentsTable = document.getElementById('students-table');
+                students.forEach(student => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${student.id}</td>
+                        <td>${student.name}</td>
+                        <td>${student.age}</td>
+                    `;
+                    studentsTable.appendChild(row);
+                });
+            })
+            .catch(error => console.error(error));
+    </script>
+</body>
+</html>
