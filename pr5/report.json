@@ -1,0 +1,73 @@
+{
+  "individualResults": [
+    {
+      "initialSchemaVersion": null,
+      "targetSchemaVersion": null,
+      "schemaName": "",
+      "migrations": [],
+      "migrationsExecuted": 0,
+      "success": true,
+      "flywayVersion": "9.22.3",
+      "database": "pr5",
+      "warnings": [],
+      "timestamp": "2023-10-27T01:45:25.507867",
+      "operation": "migrate",
+      "exception": null,
+      "licenseFailed": false
+    },
+    {
+      "initialSchemaVersion": null,
+      "targetSchemaVersion": null,
+      "schemaName": "",
+      "migrations": [],
+      "migrationsExecuted": 0,
+      "success": false,
+      "flywayVersion": "9.22.3",
+      "database": "pr5",
+      "warnings": [],
+      "timestamp": "2023-10-27T01:45:58.878806",
+      "operation": "migrate",
+      "exception": "Migration V1__pr5_tables.sql failed\n-----------------------------------\nSQL State  : 42601\nError Code : 0\nMessage    : ERROR: syntax error at or near \"IF\"\n  Position: 21\nLocation   : db/migration/V1__pr5_tables.sql (/Users/bratushkadan/projects/university/server-side/pr5/db/migration/V1__pr5_tables.sql)\nLine       : 1\nStatement  : CREATE SCHEMA \"pr5\" IF NOT EXISTS\n",
+      "licenseFailed": false
+    },
+    {
+      "initialSchemaVersion": null,
+      "targetSchemaVersion": null,
+      "schemaName": "",
+      "migrations": [],
+      "migrationsExecuted": 0,
+      "success": false,
+      "flywayVersion": "9.22.3",
+      "database": "pr5",
+      "warnings": [],
+      "timestamp": "2023-10-27T01:46:44.886623",
+      "operation": "migrate",
+      "exception": "Migration V1__pr5_tables.sql failed\n-----------------------------------\nSQL State  : 42704\nError Code : 0\nMessage    : ERROR: type \"numeric(100, 2)\" does not exist\n  Position: 157\nLocation   : db/migration/V1__pr5_tables.sql (/Users/bratushkadan/projects/university/server-side/pr5/db/migration/V1__pr5_tables.sql)\nLine       : 3\nStatement  : CREATE TABLE IF NOT EXISTS \"pr5\".\"product\" (\n  \"name\" varchar(300) NOT NULL,\n  \"seller_id\" varchar(200) NOT NULL,\n  \"type\" varchar(192) NOT NULL,\n  \"price\" \"numeric(100, 2)\" NOT NULL,\n  \"details\" jsonb DEFAULT \u0027{}\u0027 :: jsonb NOT NULL\n)\n",
+      "licenseFailed": false
+    },
+    {
+      "initialSchemaVersion": null,
+      "targetSchemaVersion": "1",
+      "schemaName": "",
+      "migrations": [
+        {
+          "category": "Versioned",
+          "version": "1",
+          "description": "pr5 tables",
+          "type": "SQL",
+          "filepath": "/Users/bratushkadan/projects/university/server-side/pr5/db/migration/V1__pr5_tables.sql",
+          "executionTime": 16
+        }
+      ],
+      "migrationsExecuted": 1,
+      "success": true,
+      "flywayVersion": "9.22.3",
+      "database": "pr5",
+      "warnings": [],
+      "timestamp": "2023-10-27T01:51:54.561827",
+      "operation": "migrate",
+      "exception": null,
+      "licenseFailed": false
+    }
+  ]
+}

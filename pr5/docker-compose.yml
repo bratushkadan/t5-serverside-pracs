@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  reverse-proxy:
+    image: nginx:1.25.2-bookworm
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./site/:/usr/share/nginx/html/delivery-site
+    networks:
+      - app_network
+    depends_on:
+      java-app:
+        condition: service_started
+  java-app:
+    image: openjdk:17
+    ports:
+      - 8080
+    networks:
+      - app_network
+    volumes:
+      - ./java-app/build/libs/:/app
+    command: ['java', '-jar', '/app/app.jar']
+    environment:
+      POSTGRES_URL: jdbc:postgresql://db-postgres:5432/pr5
+      POSTGRES_USER: bratushkadan
+      POSTGRES_PASSWORD: '123'
+    depends_on:
+      db-postgres:
+        condition: service_healthy
+  db-postgres:
+    image: postgres:16
+    ports:
+      # FIXME: - 5432
+      - 5432:5432
+    restart: always
+    environment:
+      POSTGRES_USER: bratushkadan
+      POSTGRES_PASSWORD: '123'
+      POSTGRES_DB: pr5
+    networks:
+      - app_network
+    volumes:
+      - rschir_java_app_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'test -n `pg_isready -U $POSTGRES_USER | grep "accepting connections"`']
+      interval: 1s
+      retries: 5
+
+volumes:
+  pr3_db_data: # подключается том с данными из ПР3
+    external: true
+  rschir_java_app_postgres_data:
+    external: true
+  # db_data:
+  # driver: local
+
+networks:
+  app_network:
+    driver: bridge
