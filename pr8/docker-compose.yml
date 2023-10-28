@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  reverse-proxy:
+    image: nginx:1.25.2-bookworm
+    ports:
+      - 80:80
+    volumes:
+      - ./etc/nginx/:/etc/nginx/
+    networks:
+      - app_network
+    depends_on:
+      pr8-cookie-server:
+        condition: service_started
+  pr8-cookie-server:
+    image: go-app:0.0.1-pr8
+    ports:
+      - 8080
+    networks:
+      - app_network
+    environment:
+      - APP_PORT=8080
+      - APP_COOKIE_NAME=response
+      - ENCRYPTER_SECRET_KEY=01234567891234560123456789123456
+
+# volumes:
+
+networks:
+  app_network:
+    attachable: true
+    driver: bridge
