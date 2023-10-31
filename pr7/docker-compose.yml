@@ -1,0 +1,100 @@
+version: '3'
+
+services:
+  # reverse-proxy:
+  #   image: nginx:1.25.2-bookworm
+  #   ports:
+  #     - 80:80
+  #   volumes:
+  #     - ./nginx/conf.d:/etc/nginx/conf.d
+  #     - ./site/:/usr/share/nginx/html/delivery-site
+  #   networks:
+  #     - app_network
+  #   depends_on:
+  #     java-app:
+  #       condition: service_started
+  #     auth-server:
+  #       condition: service_started
+  auth-server:
+    # FIXME: uncomment for prod
+    # image: java-auth-server:0.0.1-pr7
+    image: openjdk:17
+    ports:
+      - 5555:5555
+    networks:
+      - app_network
+    volumes:
+      # FIXME: comment for prod
+      - ./auth-server/build/libs/:/app
+    command: ['java', '-jar', '/app/app.jar']
+    environment:
+      REDIS_HOST: auth-server-redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: 123
+    depends_on:
+      auth-server-redis:
+        condition: service_healthy
+  auth-server-redis:
+    image: redis:7.2.2-alpine3.18
+    ports:
+      - 6379:6379
+    environment:
+      - REDIS_PASSWORD=123
+    networks:
+      - app_network
+    volumes:
+      - pr7_redis_data:/data
+    healthcheck:
+      test: ['CMD-SHELL', 'test -n `redis-cli ping | grep PONG`']
+      interval: 0.2s
+      retries: 20
+  # java-app:
+  #   # FIXME: uncomment for prod
+  #   # image: java-app:0.0.1-pr6
+  #   image: openjdk:17
+  #   ports:
+  #     - 8080
+  #   networks:
+  #     - app_network
+  #   volumes:
+  #     # FIXME: comment for prod
+  #     - ./java-app/build/libs/:/app
+  #   command: ['java', '-jar', '/app/app.jar']
+  #   environment:
+  #     POSTGRES_URL: jdbc:postgresql://db-postgres:5432/pr5
+  #     POSTGRES_USER: bratushkadan
+  #     POSTGRES_PASSWORD: '123'
+  #   depends_on:
+  #     db-postgres:
+  #       condition: service_healthy
+  # db-postgres:
+  #   image: postgres:16
+  #   ports:
+  #     # FIXME: - 5432
+  #     - 5432:5432
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USER: bratushkadan
+  #     POSTGRES_PASSWORD: '123'
+  #     POSTGRES_DB: pr5
+  #   networks:
+  #     - app_network
+  #   volumes:
+  #     - rschir_java_app_postgres_data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ['CMD-SHELL', 'test -n `pg_isready -U $POSTGRES_USER | grep "accepting connections"`']
+  #     interval: 1s
+  #     retries: 5
+
+volumes:
+  pr7_redis_data:
+    external: true
+  pr3_db_data: # подключается том с данными из ПР3
+    external: true
+  rschir_java_app_postgres_data:
+    external: true
+
+networks:
+  app_network:
+    attachable: true
+    driver: bridge
