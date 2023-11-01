@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  reverse-proxy:
+    image: nginx:1.25.2-bookworm
+    ports:
+      - 80:80
+    volumes:
+      - ./etc/nginx/:/etc/nginx/
+    networks:
+      - app_network
+    depends_on:
+      pr8-cookie-server:
+        condition: service_started
+  svc:
+    image: go-app:0.0.1-pr9
+    # image: golang:1.21.1-bookworm
+    # command: ["/app/app"]
+    ports:
+      - 8080
+    networks:
+      - app_network
+    environment:
+      - APP_PORT=8080
+      
+      - APP_COOKIE_NAME=response
+      - ENCRYPTER_SECRET_KEY=01234567891234560123456789123456
+
+      - MONGODB_HOST=mongo
+      - MONGO_PORT=27017
+      - MONGO_DB=appDB
+  mongo:
+    image: mongo:5.0.22-focal
+    ports:
+      - 27017
+    networks:
+      - app_network
+    volumes:
+      - mongo_gridfs:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+volumes:
+  mongo_gridfs:
+    external: true
+networks:
+  app_network:
+    attachable: true
+    driver: bridge
